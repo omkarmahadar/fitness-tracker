@@ -1,37 +1,167 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f7f7f4"><title>Food Log</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101318">
+<title>Daily Fuel — Food Tracker</title>
 <style>
-:root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#20211f;background:#f7f7f4;font-synthesis:none}*{box-sizing:border-box}body{margin:0;padding:28px 16px 56px}.app{max-width:760px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#77796f;font-weight:700}.title{font-size:30px;letter-spacing:-.04em;margin:5px 0}.sub{color:#77796f;font-size:14px}.date-wrap{display:flex;align-items:center;gap:8px}.panel{background:#fff;border:1px solid #e7e7e0;border-radius:18px;padding:20px;margin-bottom:16px}.panel h2{font-size:16px;margin:0 0 16px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field{display:flex;flex-direction:column;gap:7px}.field.wide{grid-column:1/-1}label{font-size:12px;font-weight:650;color:#65675e}input,select,textarea{font:inherit;font-size:14px;width:100%;border:1px solid #dedfd7;border-radius:10px;background:#fff;padding:11px 12px;color:#20211f;outline:none}input:focus,select:focus,textarea:focus{border-color:#55594b;box-shadow:0 0 0 3px #55594b12}button{font:inherit;border:0;border-radius:10px;padding:11px 14px;font-weight:650;cursor:pointer}.primary{background:#252720;color:white}.secondary{background:#f0f0eb;color:#33352e}.danger{background:#fff0ed;color:#a13d2a}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.stats{display:flex;justify-content:space-between;align-items:center;gap:12px}.count{font-size:27px;letter-spacing:-.04em;font-weight:750}.muted{color:#77796f;font-size:13px}.entries{display:flex;flex-direction:column;gap:9px}.entry{border:1px solid #e9e9e3;border-radius:13px;padding:13px;display:flex;align-items:flex-start;gap:12px}.time{font-variant-numeric:tabular-nums;color:#73766b;font-size:12px;min-width:55px;padding-top:3px}.entrymain{min-width:0;flex:1}.food{font-weight:700;font-size:14px;overflow-wrap:anywhere}.detail{font-size:13px;color:#77796f;margin-top:4px;overflow-wrap:anywhere}.entrybuttons{display:flex;gap:5px}.small{font-size:12px;padding:7px 9px}.empty{text-align:center;padding:26px 12px;color:#77796f;font-size:14px}.footer{font-size:12px;color:#898b81;text-align:center;margin-top:18px}.hidden{display:none!important}@media(max-width:520px){body{padding:20px 12px 40px}.top{align-items:flex-start;flex-direction:column}.date-wrap{width:100%}.formgrid{grid-template-columns:1fr 1fr}.panel{padding:16px}.entry{gap:8px}.time{min-width:46px}.entrybuttons{flex-direction:column}}
-</style></head>
-<body><main class="app">
-<header class="top"><div><div class="eyebrow">Daily journal</div><h1 class="title">Food log</h1><div class="sub">A simple record of what you ate, how much, and when.</div></div><div class="date-wrap"><label for="day" class="hidden">Log date</label><input id="day" type="date" aria-label="Log date"></div></header>
-<section class="panel"><h2 id="formTitle">Add food</h2><form id="foodForm"><div class="formgrid">
-<div class="field wide"><label for="food">What did you eat? *</label><input id="food" required maxlength="120" placeholder="e.g. Chicken and rice"></div>
-<div class="field"><label for="amount">Approx. amount</label><input id="amount" maxlength="60" placeholder="e.g. 1 bowl, 150 g"></div>
-<div class="field"><label for="time">Time *</label><input id="time" type="time" required></div>
-<div class="field"><label for="meal">Meal (optional)</label><select id="meal"><option value="">Choose…</option><option>Breakfast</option><option>Lunch</option><option>Snack</option><option>Dinner</option><option>Drink</option><option>Other</option></select></div>
-<div class="field"><label for="notes">Notes (optional)</label><input id="notes" maxlength="160" placeholder="e.g. with 1 tsp oil"></div>
-</div><div class="actions"><button class="primary" type="submit" id="saveBtn">Add entry</button><button class="secondary hidden" type="button" id="cancelEdit">Cancel edit</button></div></form></section>
-<section class="panel"><div class="stats"><div><div class="muted">Entries for this day</div><div class="count" id="entryCount">0</div></div><div class="actions" style="margin:0"><button class="secondary" id="exportBtn" type="button">Export CSV</button><button class="secondary" id="clearBtn" type="button">Clear day</button></div></div></section>
-<section class="panel"><h2>Today's entries</h2><div id="entries" class="entries"></div></section>
-<div class="footer">Saved in this browser on this device. Export CSV regularly to keep a backup.</div>
-</main>
+:root{color-scheme:dark;--bg:#101318;--panel:#181d25;--panel2:#202733;--text:#f3f5f8;--muted:#9ca7b7;--line:#2c3543;--accent:#b9f27c;--accentText:#14200a;--red:#ff8f8f;--radius:18px}
+[data-theme="light"]{color-scheme:light;--bg:#f4f6f8;--panel:#fff;--panel2:#eef1f4;--text:#17202b;--muted:#5f6b7b;--line:#dbe1e8;--accent:#376e12;--accentText:#fff;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:980px;margin:0 auto;padding:18px 16px 96px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 20px}.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:14px;background:var(--accent);color:var(--accentText);display:grid;place-items:center;font-weight:900;font-size:20px}.brand h1{font-size:20px;margin:0;letter-spacing:-.6px}.brand p{margin:1px 0 0;color:var(--muted);font-size:12px}.iconbtn,.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+h2{font-size:22px;letter-spacing:-.6px;margin:0 0 4px}h3{font-size:15px;margin:0 0 12px}.sub{color:var(--muted);margin:0 0 18px;font-size:13px}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}.metric,.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}.metric strong{font-size:25px;letter-spacing:-.8px;display:block;margin:7px 0 2px}.metric small{color:var(--muted)}.track{height:8px;border-radius:99px;background:var(--panel2);overflow:hidden;margin:12px 0 6px}.fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .2s}.metric-foot{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.nav{display:flex;gap:6px;padding:5px;background:var(--panel);border:1px solid var(--line);border-radius:15px;margin-bottom:20px;position:sticky;top:8px;z-index:5}.nav button{flex:1;border:0;border-radius:11px;padding:11px 8px;background:transparent;color:var(--muted);font-weight:650}.nav button.active{background:var(--panel2);color:var(--text)}
+.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}.field label{font-size:12px;color:var(--muted);font-weight:650}.field input,.field select,.field textarea{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none;min-width:0}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}.full{grid-column:1/-1}.row{display:flex;gap:10px;align-items:center}.row>*{flex:1;min-width:0}.primary{background:var(--accent);color:var(--accentText);border:0;border-radius:12px;padding:13px 16px;font-weight:800;width:100%}.hint{color:var(--muted);font-size:12px;margin:6px 0 0}.estimate-note{color:var(--muted);font-size:12px;margin:0 0 12px}.loglist{display:flex;flex-direction:column;gap:9px}.entry{display:flex;align-items:flex-start;gap:12px;padding:13px;background:var(--panel);border:1px solid var(--line);border-radius:14px}.entry-main{flex:1;min-width:0}.entry-title{font-weight:750;overflow-wrap:anywhere}.entry-meta{font-size:12px;color:var(--muted);margin-top:3px}.entry-nutrition{white-space:nowrap;text-align:right;font-size:12px;color:var(--muted)}.entry-actions{display:flex;gap:5px;margin-top:8px}.entry-actions button{font-size:12px;padding:5px 8px}.badge{font-size:11px;border:1px solid var(--line);color:var(--muted);padding:3px 7px;border-radius:99px}.statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.stat{background:var(--panel2);border-radius:12px;padding:12px}.stat span{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:18px}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px}.table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}.table th,.table td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}.table th{color:var(--muted);font-weight:650;background:var(--panel)}.table tr:last-child td{border-bottom:0}.empty{text-align:center;color:var(--muted);padding:28px 12px;background:var(--panel);border:1px dashed var(--line);border-radius:14px}.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 10px}.status{font-size:12px;color:var(--muted);margin-top:10px}.status.ok{color:var(--accent)}.status.err{color:var(--red)}.tiny{font-size:11px;color:var(--muted)}.hidden{display:none!important}
+@media(max-width:560px){.app{padding:14px 12px 90px}.metric,.card{padding:13px}.metric strong{font-size:22px}.grid{grid-template-columns:1fr;gap:0}.full{grid-column:auto}.nav button{font-size:12px;padding:11px 4px}.statrow{grid-template-columns:1fr 1fr 1fr;gap:6px}.stat{padding:9px}.stat strong{font-size:16px}.summary{gap:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><div class="logo">df</div><div><h1>Daily Fuel</h1><p>Small entries. Better awareness.</p></div></div>
+  <div class="row" style="flex:0 0 auto"><button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode">☼ / ☾</button></div>
+</header>
+<section class="summary" aria-label="Today's progress">
+  <div class="metric"><div class="metric-top"><span>Calories</span><span id="calPct">0%</span></div><strong><span id="topCalories">0</span><small> / <span id="calGoalTop">2600</span> kcal</small></strong><div class="track"><div class="fill" id="calBar"></div></div><div class="metric-foot"><span id="calRemain">2,600 kcal left</span><span>daily goal</span></div></div>
+  <div class="metric"><div class="metric-top"><span>Protein</span><span id="proteinPct">0%</span></div><strong><span id="topProtein">0</span><small> / <span id="proteinGoalTop">150</span> g</small></strong><div class="track"><div class="fill" id="proteinBar"></div></div><div class="metric-foot"><span id="proteinRemain">150 g left</span><span>daily goal</span></div></div>
+</section>
+<nav class="nav" aria-label="Main navigation">
+<button class="active" data-page="logPage">＋ Log food</button><button data-page="dashPage">◫ Dashboard</button><button data-page="historyPage">☷ History</button>
+</nav>
+
+<section class="page active" id="logPage">
+  <h2>Log a meal</h2><p class="sub">Choose a familiar food, adjust the estimate, and save.</p>
+  <form id="foodForm" class="card">
+    <input id="editId" type="hidden">
+    <div class="grid">
+      <div class="field"><label for="foodSearch">Food item</label><input id="foodSearch" list="foodOptions" placeholder="Search chicken, roti, pizza…" autocomplete="off" required><datalist id="foodOptions"></datalist><p class="hint">Options come from the FoodDatabase sheet when connected.</p></div>
+      <div class="field"><label for="mealType">Meal</label><select id="mealType"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option><option>Drink</option><option>Other</option></select></div>
+      <div class="field"><label for="entryDate">Date</label><input id="entryDate" type="date" required></div>
+      <div class="field"><label for="entryTime">Time</label><input id="entryTime" type="time" required></div>
+      <div class="field"><label for="quantity">Quantity / serving</label><input id="quantity" placeholder="e.g. 150 g, 2 rotis, 1 bowl" required></div>
+      <div class="field"><label for="servings">Servings multiplier</label><input id="servings" type="number" min="0.1" step="0.1" value="1"></div>
+      <div class="field"><label for="calories">Approx. calorie estimate (kcal)</label><input id="calories" type="number" min="0" step="1" placeholder="Estimate or enter manually" required></div>
+      <div class="field"><label for="protein">Protein (g)</label><input id="protein" type="number" min="0" step="0.1" placeholder="Estimate or enter manually" required></div>
+      <div class="field full"><label for="notes">Notes (optional)</label><input id="notes" placeholder="e.g. homemade, extra oil, restaurant portion"></div>
+    </div>
+    <p class="estimate-note">Nutrition values are estimates. Selecting a database food fills its default serving values; edit them to match your portion.</p>
+    <div class="row"><button class="primary" id="saveBtn" type="submit">＋ Save food entry</button><button class="secondary hidden" id="cancelEdit" type="button">Cancel edit</button></div>
+    <p class="status" id="formStatus" role="status"></p>
+  </form>
+  <div class="sectionhead"><h3>Today's entries</h3><span class="badge" id="todayCount">0 entries</span></div>
+  <div id="todayEntries" class="loglist"></div>
+</section>
+
+<section class="page" id="dashPage">
+  <h2>Your intake</h2><p class="sub">Check daily and weekly progress against your targets.</p>
+  <div class="card">
+    <div class="row"><div class="field"><label for="dashDate">Selected date</label><input id="dashDate" type="date"></div><div class="field"><label for="dashPeriod">View</label><select id="dashPeriod"><option value="day">Selected day</option><option value="week">7-day week</option></select></div></div>
+    <div class="statrow"><div class="stat"><span>Calories</span><strong id="dashCalories">0</strong></div><div class="stat"><span>Protein</span><strong id="dashProtein">0 g</strong></div><div class="stat"><span>Entries</span><strong id="dashCount">0</strong></div></div>
+    <div class="sectionhead"><h3>Calories vs goal</h3><span class="badge" id="dashCalHit">Not hit</span></div><div class="track"><div class="fill" id="dashCalBar"></div></div><div class="metric-foot"><span id="dashCalText">0 / 2600 kcal</span><span id="dashCalDelta"></span></div>
+    <div class="sectionhead"><h3>Protein vs goal</h3><span class="badge" id="dashProteinHit">Not hit</span></div><div class="track"><div class="fill" id="dashProteinBar"></div></div><div class="metric-foot"><span id="dashProteinText">0 / 150 g</span><span id="dashProteinDelta"></span></div>
+    <div class="statrow"><div class="stat"><span>Days calorie goal hit</span><strong id="daysCalHit">0</strong></div><div class="stat"><span>Days protein goal hit</span><strong id="daysProteinHit">0</strong></div><div class="stat"><span>Both goals hit</span><strong id="daysBothHit">0</strong></div></div>
+  </div>
+  <div class="sectionhead"><h3>Daily breakdown</h3><button class="secondary" id="exportDash">Export CSV</button></div><div id="dailyBreakdown"></div>
+</section>
+
+<section class="page" id="historyPage">
+  <h2>Food history</h2><p class="sub">Review, edit, repeat, or export what you've logged.</p>
+  <div class="card">
+    <div class="grid">
+      <div class="field"><label for="historyFrom">From date</label><input id="historyFrom" type="date"></div>
+      <div class="field"><label for="historyTo">To date</label><input id="historyTo" type="date"></div>
+      <div class="field full"><label for="historySearch">Search food</label><input id="historySearch" placeholder="e.g. chicken, roti, coffee"></div>
+    </div>
+    <div class="row"><button class="secondary" id="filterHistory">Apply filters</button><button class="secondary" id="exportHistory">Export CSV</button></div>
+  </div>
+  <div class="sectionhead"><h3>Entries</h3><span class="badge" id="historyCount">0 entries</span></div><div id="historyEntries" class="loglist"></div>
+</section>
+<footer class="status" id="connectionStatus">Local mode · configure Apps Script to sync with Google Sheets.</footer>
+</div>
 <script>
-(()=>{'use strict';const $=id=>document.getElementById(id);const storageKey='minimal-food-log-v1';let all=[];let editingId=null;
-const localDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-const nowTime=()=>{const d=new Date();return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
-try{all=JSON.parse(localStorage.getItem(storageKey)||'[]');if(!Array.isArray(all))all=[]}catch{all=[]}
-$('day').value=localDate();$('time').value=nowTime();
-function persist(){localStorage.setItem(storageKey,JSON.stringify(all));render()}
-function resetForm(){editingId=null;$('foodForm').reset();$('time').value=nowTime();$('formTitle').textContent='Add food';$('saveBtn').textContent='Add entry';$('cancelEdit').classList.add('hidden')}
-function render(){const day=$('day').value||localDate();const items=all.filter(x=>x.date===day).sort((a,b)=>a.time.localeCompare(b.time)||a.createdAt-b.createdAt);$('entryCount').textContent=items.length;$('entries').replaceChildren();if(!items.length){const e=document.createElement('div');e.className='empty';e.textContent='Nothing logged yet. Add your first entry above.';$('entries').append(e);return}for(const item of items){const row=document.createElement('div');row.className='entry';const time=document.createElement('div');time.className='time';time.textContent=item.time;const main=document.createElement('div');main.className='entrymain';const food=document.createElement('div');food.className='food';food.textContent=item.food;main.append(food);const detail=document.createElement('div');detail.className='detail';detail.textContent=[item.amount,item.meal,item.notes].filter(Boolean).join(' · ')||'No extra details';main.append(detail);const buttons=document.createElement('div');buttons.className='entrybuttons';const edit=document.createElement('button');edit.className='secondary small';edit.textContent='Edit';edit.onclick=()=>editItem(item.id);const del=document.createElement('button');del.className='danger small';del.textContent='Delete';del.onclick=()=>{if(confirm('Delete this food entry?')){all=all.filter(x=>x.id!==item.id);if(editingId===item.id)resetForm();persist()}};buttons.append(edit,del);row.append(time,main,buttons);$('entries').append(row)}}
-function editItem(id){const x=all.find(y=>y.id===id);if(!x)return;editingId=id;$('food').value=x.food;$('amount').value=x.amount;$('time').value=x.time;$('meal').value=x.meal;$('notes').value=x.notes;$('formTitle').textContent='Edit food';$('saveBtn').textContent='Save changes';$('cancelEdit').classList.remove('hidden');$('food').focus();window.scrollTo({top:0,behavior:'smooth'})}
-$('foodForm').addEventListener('submit',e=>{e.preventDefault();const item={id:editingId||`${Date.now()}-${Math.random().toString(36).slice(2,8)}`,date:$('day').value||localDate(),food:$('food').value.trim(),amount:$('amount').value.trim(),time:$('time').value,meal:$('meal').value,notes:$('notes').value.trim(),createdAt:Date.now()};if(!item.food||!item.time)return;if(editingId){const i=all.findIndex(x=>x.id===editingId);if(i>=0)all[i]={...all[i],...item}}else all.push(item);persist();resetForm()});
-$('cancelEdit').onclick=resetForm;$('day').addEventListener('change',()=>{if(editingId)resetForm();render()});
-$('clearBtn').onclick=()=>{const day=$('day').value||localDate();if(!all.some(x=>x.date===day))return;if(confirm(`Clear all entries for ${day}? This cannot be undone.`)){all=all.filter(x=>x.date!==day);persist();resetForm()}};
-$('exportBtn').onclick=()=>{const headers=['Date','Time','Food','Approx amount','Meal','Notes'];const rows=all.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time)).map(x=>[x.date,x.time,x.food,x.amount,x.meal,x.notes]);const csv=[headers,...rows].map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`food-log-${$('day').value||localDate()}.csv`;a.click();URL.revokeObjectURL(url)};
-render();})();
-</script></body></html>
+const DEFAULT_FOODS = [
+ {name:"Chicken rice",serving:"150 g chicken + 1 cup cooked rice",calories:600,protein:48,meal:"Lunch"},
+ {name:"Chicken breast, cooked",serving:"100 g",calories:165,protein:31,meal:"Lunch"},
+ {name:"Egg, whole",serving:"1 large egg",calories:72,protein:6.3,meal:"Breakfast"},
+ {name:"Roti",serving:"1 medium roti",calories:120,protein:3.5,meal:"Lunch"},
+ {name:"Roti sabji",serving:"2 rotis + 1 bowl sabji",calories:420,protein:12,meal:"Lunch"},
+ {name:"Rice, cooked",serving:"1 cup",calories:205,protein:4.3,meal:"Lunch"},
+ {name:"Dal",serving:"1 bowl",calories:180,protein:10,meal:"Lunch"},
+ {name:"Oats with milk",serving:"50 g oats + 200 ml milk",calories:330,protein:15,meal:"Breakfast"},
+ {name:"Curd",serving:"150 g",calories:90,protein:5,meal:"Snack"},
+ {name:"Banana",serving:"1 medium",calories:105,protein:1.3,meal:"Snack"},
+ {name:"Apple",serving:"1 medium",calories:95,protein:0.5,meal:"Snack"},
+ {name:"Whey protein",serving:"1 scoop",calories:120,protein:24,meal:"Snack"},
+ {name:"Burger",serving:"1 regular burger",calories:550,protein:25,meal:"Lunch"},
+ {name:"Pizza",serving:"2 medium slices",calories:560,protein:24,meal:"Dinner"},
+ {name:"Dessert",serving:"1 serving",calories:300,protein:4,meal:"Snack"},
+ {name:"Chocolate",serving:"30 g",calories:160,protein:2,meal:"Snack"},
+ {name:"French fries",serving:"1 medium serving",calories:365,protein:4,meal:"Snack"},
+ {name:"Sandwich",serving:"1 sandwich",calories:350,protein:15,meal:"Lunch"},
+ {name:"Coffee with milk",serving:"1 cup",calories:80,protein:4,meal:"Drink"},
+ {name:"Tea with milk and sugar",serving:"1 cup",calories:90,protein:3,meal:"Drink"},
+ {name:"Mixed nuts",serving:"30 g",calories:180,protein:6,meal:"Snack"},
+ {name:"Paneer",serving:"100 g",calories:265,protein:18,meal:"Lunch"},
+ {name:"Fish, cooked",serving:"100 g",calories:140,protein:26,meal:"Lunch"},
+ {name:"Salad",serving:"1 bowl",calories:100,protein:3,meal:"Lunch"}
+];
+const $ = id => document.getElementById(id);
+const dateISO = (d=new Date()) => {const x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,10)};
+const timeNow = () => {const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+let entries=[], foods=[...DEFAULT_FOODS], settings={calorieGoal:2600,proteinGoal:150}, editMode=false;
+let apiUrl=localStorage.getItem('dailyFuelApiUrl')||'';
+const readLocal=()=>{try{entries=JSON.parse(localStorage.getItem('dailyFuelEntries')||'[]')}catch{entries=[]}};
+const saveLocal=()=>localStorage.setItem('dailyFuelEntries',JSON.stringify(entries));
+const fmt=n=>Math.round(Number(n)||0).toLocaleString();
+const sum=(arr,key)=>arr.reduce((a,e)=>a+(Number(e[key])||0),0);
+const dayEntries=date=>entries.filter(e=>e.date===date).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+const byDate=()=>{const map={};entries.forEach(e=>{map[e.date]??={date:e.date,calories:0,protein:0,count:0};map[e.date].calories+=Number(e.calories)||0;map[e.date].protein+=Number(e.protein)||0;map[e.date].count++});return map};
+function setTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem('dailyFuelTheme',theme);$('themeBtn').textContent=theme==='dark'?'☼ Light':'☾ Dark'}
+function setStatus(msg,kind=''){const s=$('formStatus');s.textContent=msg;s.className='status '+kind}
+function fillFoodOptions(){const dl=$('foodOptions');dl.innerHTML='';foods.forEach(f=>{const o=document.createElement('option');o.value=f.name;dl.appendChild(o)})}
+function foodSelected(){const name=$('foodSearch').value.trim();const f=foods.find(x=>x.name.toLowerCase()===name.toLowerCase());if(!f)return;const mult=Math.max(.1,Number($('servings').value)||1);$('quantity').value=f.serving||'1 serving';$('calories').value=Math.round(f.calories*mult);$('protein').value=(f.protein*mult).toFixed(1).replace(/\.0$/,'');$('mealType').value=f.meal||'Other'}
+$('foodSearch').addEventListener('change',foodSelected);$('foodSearch').addEventListener('input',()=>{const f=foods.find(x=>x.name.toLowerCase()=== $('foodSearch').value.trim().toLowerCase());if(f)foodSelected()});
+$('servings').addEventListener('input',foodSelected);
+function renderTop(){const today=dateISO(),arr=dayEntries(today),c=sum(arr,'calories'),p=sum(arr,'protein'),cg=Number(settings.calorieGoal)||2600,pg=Number(settings.proteinGoal)||150;
+$('topCalories').textContent=fmt(c);$('topProtein').textContent=(Math.round(p*10)/10).toString();$('calGoalTop').textContent=fmt(cg);$('proteinGoalTop').textContent=pg;
+$('calPct').textContent=Math.round(c/cg*100)+'%';$('proteinPct').textContent=Math.round(p/pg*100)+'%';$('calBar').style.width=Math.min(100,c/cg*100)+'%';$('proteinBar').style.width=Math.min(100,p/pg*100)+'%';$('calRemain').textContent=cg-c>=0?fmt(cg-c)+' kcal left':fmt(c-cg)+' kcal over';$('proteinRemain').textContent=pg-p>=0?(Math.round((pg-p)*10)/10)+' g left':(Math.round((p-pg)*10)/10)+' g over';renderToday()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function entryHtml(e){return `<div class="entry"><div class="entry-main"><div class="entry-title">${esc(e.food)} <span class="badge">${esc(e.meal||'Other')}</span></div><div class="entry-meta">${esc(e.date)} · ${esc(e.time)} · ${esc(e.quantity||'')}</div>${e.notes?`<div class="entry-meta">${esc(e.notes)}</div>`:''}<div class="entry-actions"><button class="secondary" data-action="repeat" data-id="${esc(e.id)}">Repeat</button><button class="secondary" data-action="edit" data-id="${esc(e.id)}">Edit</button><button class="secondary" data-action="delete" data-id="${esc(e.id)}">Delete</button></div></div><div class="entry-nutrition"><b>${fmt(e.calories)} kcal</b><br>${Math.round((Number(e.protein)||0)*10)/10} g protein</div></div>`}
+function renderToday(){const arr=dayEntries(dateISO());$('todayCount').textContent=arr.length+' entr'+(arr.length===1?'y':'ies');$('todayEntries').innerHTML=arr.length?arr.map(entryHtml).join(''):'<div class="empty">No food logged today yet. Start with your next meal.</div>'}
+function updateDashboard(){const date=$('dashDate').value||dateISO(),period=$('dashPeriod').value;let dates=[];if(period==='day')dates=[date];else{const d=new Date(date+'T12:00:00');for(let i=6;i>=0;i--){const x=new Date(d);x.setDate(d.getDate()-i);dates.push(dateISO(x))}}
+const arr=entries.filter(e=>dates.includes(e.date)),c=sum(arr,'calories'),p=sum(arr,'protein'),cg=Number(settings.calorieGoal)||2600,pg=Number(settings.proteinGoal)||150;
+$('dashCalories').textContent=fmt(c);$('dashProtein').textContent=(Math.round(p*10)/10)+' g';$('dashCount').textContent=arr.length;
+const calPercent=c/cg*100,proPercent=p/pg*100;$('dashCalBar').style.width=Math.min(100,calPercent)+'%';$('dashProteinBar').style.width=Math.min(100,proPercent)+'%';$('dashCalText').textContent=`${fmt(c)} / ${fmt(cg)} kcal`;$('dashProteinText').textContent=`${Math.round(p*10)/10} / ${pg} g`;
+$('dashCalHit').textContent=c>=cg?'Goal hit':'Not hit';$('dashProteinHit').textContent=p>=pg?'Goal hit':'Not hit';$('dashCalDelta').textContent=c>=cg?fmt(c-cg)+' over':fmt(cg-c)+' left';$('dashProteinDelta').textContent=p>=pg?(Math.round((p-pg)*10)/10)+' g over':(Math.round((pg-p)*10)/10)+' g left';
+const map=byDate();let ch=0,ph=0,bh=0;dates.forEach(d=>{const x=map[d]||{calories:0,protein:0};if(x.calories>=cg)ch++;if(x.protein>=pg)ph++;if(x.calories>=cg&&x.protein>=pg)bh++});$('daysCalHit').textContent=ch;$('daysProteinHit').textContent=ph;$('daysBothHit').textContent=bh;
+const rows=dates.map(d=>{const x=map[d]||{calories:0,protein:0,count:0};return `<tr><td>${esc(d)}</td><td>${fmt(x.calories)}</td><td>${Math.round(x.protein*10)/10} g</td><td>${x.count||0}</td><td>${x.calories>=cg?'✓':'—'}</td><td>${x.protein>=pg?'✓':'—'}</td></tr>`}).join('');
+$('dailyBreakdown').innerHTML=`<div class="tablewrap"><table class="table"><thead><tr><th>Date</th><th>Calories</th><th>Protein</th><th>Entries</th><th>Cal goal</th><th>Protein goal</th></tr></thead><tbody>${rows}</tbody></table></div>`}
+function renderHistory(){const from=$('historyFrom').value,to=$('historyTo').value,q=$('historySearch').value.trim().toLowerCase();const arr=[...entries].filter(e=>(!from||e.date>=from)&&(!to||e.date<=to)&&(!q||e.food.toLowerCase().includes(q))).sort((a,b)=>(b.date+b.time).localeCompare(a.date+a.time));$('historyCount').textContent=arr.length+' entries';$('historyEntries').innerHTML=arr.length?arr.map(entryHtml).join(''):'<div class="empty">No entries match these filters.</div>'}
+function renderAll(){renderTop();updateDashboard();renderHistory()}
+function resetForm(){editMode=false;$('editId').value='';$('foodForm').reset();$('entryDate').value=dateISO();$('entryTime').value=timeNow();$('servings').value=1;$('saveBtn').textContent='＋ Save food entry';$('cancelEdit').classList.add('hidden');setStatus('')}
+function saveEntry(e){e.preventDefault();const item={id:$('editId').value||crypto.randomUUID(),food:$('foodSearch').value.trim(),meal:$('mealType').value,date:$('entryDate').value,time:$('entryTime').value,quantity:$('quantity').value.trim(),servings:Number($('servings').value)||1,calories:Number($('calories').value),protein:Number($('protein').value),notes:$('notes').value.trim(),updatedAt:new Date().toISOString()};if(!item.food||!item.date||!Number.isFinite(item.calories)||!Number.isFinite(item.protein)){setStatus('Please enter a food, date, calories and protein.','err');return}
+const idx=entries.findIndex(x=>x.id===item.id);if(idx>=0)entries[idx]=item;else{item.createdAt=item.updatedAt;entries.push(item)}saveLocal();if(apiUrl)sendToApi({action:idx>=0?'updateEntry':'addEntry',entry:item});renderAll();resetForm();setStatus('Saved on this device'+(apiUrl?' · syncing to Google Sheets…':''),'ok');setTimeout(()=>setStatus(''),3500)}
+$('foodForm').addEventListener('submit',saveEntry);$('cancelEdit').addEventListener('click',resetForm);
+function editEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;showPage('logPage');$('editId').value=e.id;$('foodSearch').value=e.food;$('mealType').value=e.meal||'Other';$('entryDate').value=e.date;$('entryTime').value=e.time;$('quantity').value=e.quantity;$('servings').value=e.servings||1;$('calories').value=e.calories;$('protein').value=e.protein;$('notes').value=e.notes||'';$('saveBtn').textContent='Save changes';$('cancelEdit').classList.remove('hidden');editMode=true;window.scrollTo({top:0,behavior:'smooth'})}
+function repeatEntry(id){const e=entries.find(x=>x.id===id);if(!e)return;showPage('logPage');$('editId').value='';$('foodSearch').value=e.food;$('mealType').value=e.meal||'Other';$('entryDate').value=dateISO();$('entryTime').value=timeNow();$('quantity').value=e.quantity;$('servings').value=e.servings||1;$('calories').value=e.calories;$('protein').value=e.protein;$('notes').value=e.notes||'';$('saveBtn').textContent='＋ Save repeated entry';$('cancelEdit').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
+function deleteEntry(id){const e=entries.find(x=>x.id===id);if(!e||!confirm('Delete '+e.food+'?'))return;entries=entries.filter(x=>x.id!==id);saveLocal();if(apiUrl)sendToApi({action:'deleteEntry',id});renderAll()}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-action]');if(!b)return;const id=b.dataset.id;if(b.dataset.action==='edit')editEntry(id);if(b.dataset.action==='repeat')repeatEntry(id);if(b.dataset.action==='delete')deleteEntry(id)});
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));if(id==='dashPage')updateDashboard();if(id==='historyPage')renderHistory();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+$('dashDate').addEventListener('change',updateDashboard);$('dashPeriod').addEventListener('change',updateDashboard);$('filterHistory').addEventListener('click',renderHistory);$('historySearch').addEventListener('input',renderHistory);
+function exportCSV(arr,filename){const cols=['date','time','meal','food','quantity','servings','calories','protein','notes'];const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const csv=[cols.join(','),...arr.map(e=>cols.map(c=>q(e[c])).join(','))].join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download=filename;a.click();URL.revokeObjectURL(a.href)}
+$('exportHistory').addEventListener('click',()=>exportCSV(entries,'food-log.csv'));$('exportDash').addEventListener('click',()=>{const d=$('dashDate').value,dates=[];if($('dashPeriod').value==='day')dates.push(d);else{const x=new Date(d+'T12:00:00');for(let i=6;i>=0;i--){const z=new Date(x);z.setDate(x.getDate()-i);dates.push(dateISO(z))}}exportCSV(entries.filter(e=>dates.includes(e.date)),'food-log-period.csv')});
+$('themeBtn').addEventListener('click',()=>setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+
+function sendToApi(payload){if(!apiUrl)return;try{const body=new URLSearchParams({payload:JSON.stringify(payload)});fetch(apiUrl,{method:'POST',mode:'no-cors',body}).catch(()=>{});}catch{}}
+function loadFromApi(){if(!apiUrl){$('connectionStatus').textContent='Local mode · configure Apps Script to sync with Google Sheets.';return} $('connectionStatus').textContent='Google Sheets sync configured · loading data…';const cb='dfcb_'+Math.random().toString(36).slice(2);window[cb]=data=>{try{if(data.foods?.length)foods=data.foods;if(data.entries){entries=data.entries;saveLocal()}if(data.settings)settings={...settings,...data.settings};fillFoodOptions();renderAll();$('connectionStatus').textContent='Connected to Google Sheets · data loaded';}catch(err){$('connectionStatus').textContent='Could not parse Google Sheets response; local data remains available.'}finally{delete window[cb];script.remove()}};const script=document.createElement('script');script.src=apiUrl+(apiUrl.includes('?')?'&':'?')+'action=getData&callback='+cb;script.onerror=()=>{$('connectionStatus').textContent='Could not load Google Sheets data. Check the Apps Script deployment URL and access settings.';delete window[cb];script.remove()};document.head.appendChild(script)}
+function promptApi(){const value=prompt('Paste your deployed Google Apps Script Web App URL (leave blank to use local-only mode):',apiUrl);if(value===null)return;apiUrl=value.trim();if(apiUrl)localStorage.setItem('dailyFuelApiUrl',apiUrl);else localStorage.removeItem('dailyFuelApiUrl');loadFromApi()}
+$('connectionStatus').addEventListener('click',()=>{if(confirm('Configure or change the Google Apps Script Web App URL?'))promptApi()});
+function init(){setTheme(localStorage.getItem('dailyFuelTheme')||'dark');readLocal();$('entryDate').value=dateISO();$('entryTime').value=timeNow();$('dashDate').value=dateISO();$('historyFrom').value=dateISO(new Date(Date.now()-6*86400000));$('historyTo').value=dateISO();fillFoodOptions();renderAll();if(apiUrl)loadFromApi();else{$('connectionStatus').textContent='Local mode · tap this status line to configure Google Sheets sync.';$('connectionStatus').style.cursor='pointer'}}
+init();
+</script>
+</body>
+</html>
